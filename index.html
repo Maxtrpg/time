@@ -164,7 +164,7 @@
         <button class="btn-refresh" onclick="loadSchedule()">↻ 重新整理 / 儲存確認</button>
     </div>
 
-    <div class="footer">MAZTICA CAMPAIGN TOOLS</div>
+    <div class="footer">團務時間表</div>
 
     <script>
         // ==========================================
@@ -201,7 +201,7 @@
             // 更新標題
             const titleText = campaignTitles[currentSheet] || currentSheet.toUpperCase();
             document.getElementById('page-title').innerText = titleText;
-            document.getElementById('page-subtitle').innerText = "Availability Check";
+            document.getElementById('page-subtitle').innerText = "團務時間約起來";
 
             loadSchedule();
         });
@@ -326,4 +326,5 @@ function renderTable(data) {
 </body>
 
 </html>
+
 

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>團務時空樞紐 | Scheduler</title>
+    <title>馬茲提卡約團表</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
-   <style>
+<style>
     :root {
         --bg-paper: #F2E8D5; 
         --ink-dark: #2F261F; 
@@ -16,8 +16,8 @@
         --fail-red: #c0392b;
     }
 
-    /* 基礎設定保持不變 */
     * { box-sizing: border-box; }
+
     body {
         background-color: var(--bg-paper);
         color: var(--ink-dark);
@@ -59,6 +59,7 @@
     table {
         width: 100%; border-collapse: separate; border-spacing: 0;
         white-space: nowrap;
+        table-layout: fixed; /* 讓表格寬度更穩定 */
     }
 
     th {
@@ -66,72 +67,61 @@
         padding: 15px; position: sticky; top: 0; z-index: 20;
         font-family: 'Cinzel', serif; letter-spacing: 1px; font-size: 1.1rem;
         border-bottom: 3px solid var(--antique-gold);
+        min-width: 80px; /* ★ 玩家欄位固定最小寬度 */
     }
 
-    /* 統一所有格子的字體大小與對齊 */
     td {
-        height: 50px; /* 強制高度 */
-        padding: 0;   /* 清除 padding 改用 flex 置中 */
+        height: 55px; /* 格子稍微加高一點，讓符號呼吸 */
+        padding: 0;
         border-bottom: 1px solid var(--ink-light);
         border-right: 1px solid var(--ink-light);
-        font-size: 1.2rem; /* 統一字體大小 */
-        font-weight: bold;
         vertical-align: middle;
+        min-width: 80px; /* ★ 玩家格寬度一致 */
     }
 
-    /* 第一欄 (日期) */
+    /* === 第一欄 (日期) 設定 === */
     td:first-child {
         position: sticky; left: 0; z-index: 10;
         background: #E8DCC5; 
         border-right: 3px solid var(--ink-dark);
-        text-align: left; 
-        padding-left: 15px; 
+        
+        /* ★ 日期欄樣式調整 ★ */
+        text-align: center;  /* 置中 */
+        padding-left: 0;     /* 移除左邊距 */
         color: var(--ink-dark);
-        font-size: 1rem; /* 日期字稍微小一點點比較優雅 */
-        width: 140px;
-        min-width: 140px;
+        font-size: 1rem; 
+        font-weight: bold;
+        width: 160px;       /* 加寬 */
+        min-width: 160px;   /* 固定寬度 */
     }
 
-    /* ★ 重點標註樣式 (加在日期欄位上) ★ */
-    /* 完美成團 (全 O) */
+    /* 重點標註樣式 */
     td.date-perfect {
         background: var(--perfect-green) !important;
         color: white !important;
-        position: relative;
     }
-    td.date-perfect::after {
-        content: " ★ GO!"; position: absolute; right: 10px; font-size: 0.8rem; color: #ffd700;
-    }
-
-    /* 潛力股 (無 X 且無空) */
     td.date-potential {
         background: var(--potential-orange) !important;
         color: white !important;
     }
 
-    /* 狀態按鈕 (Flexbox 完美置中) */
+    /* === 狀態按鈕 (O X ?) 設定 === */
     .cell-btn {
         width: 100%; height: 100%;
         display: flex; justify-content: center; align-items: center;
         cursor: pointer; transition: 0.2s; user-select: none;
-        font-family: 'Noto Serif TC', serif; /* 確保符號字體一致 */
+        
+        /* ★ 統一字體大小 ★ */
+        font-family: sans-serif; /* 用無襯線字體讓符號看起來更圓潤統一 */
+        font-size: 1.3rem;       /* 大家一樣大 */
+        font-weight: 900;        /* 大家一樣粗 */
     }
     .cell-btn:hover { background: rgba(0,0,0,0.05); transform: scale(1.1); }
 
-    /* ★ 狀態顏色設定 ★ */
-    .status-o { 
-        color: var(--perfect-green); 
-        /* O 不需要太粗，保持優雅 */
-    } 
-    .status-x { 
-        color: #8b0000; /* 深紅色 */
-        font-weight: 900; /* 極粗體 */
-        font-size: 1.4rem; /* 稍微放大一點 */
-    } 
-    .status-q { 
-        color: #e67e22; /* 橘色 */
-        font-weight: 800;
-    } 
+    /* 顏色設定 */
+    .status-o { color: var(--perfect-green); } 
+    .status-x { color: #8b0000; } /* 深紅色 */
+    .status-q { color: #e67e22; } /* 橘色 */
     
     .btn-refresh {
         margin-top: 25px;
@@ -155,19 +145,19 @@
 
     <div class="container">
         <div class="header">
-            <h1 id="page-title">團務時空樞紐</h1>
+            <h1 id="page-title">馬茲提卡約團表</h1>
             <div class="subtitle" id="page-subtitle">Session Scheduler</div>
         </div>
 
         <div class="legend">
-            <span class="status-o">O (可)</span>
-            <span class="status-x">X (不可)</span>
+            <span class="status-o">O (可以)</span>
+            <span class="status-x">X (不行)</span>
             <span class="status-q">? (未定)</span>
         </div>
 
         <div id="scheduler-container" class="table-wrapper">
             <div style="padding: 50px; text-align: center; color: var(--ink-light);">
-                正在讀取星象紀錄...
+                正在讀取...
             </div>
         </div>
 
@@ -336,3 +326,4 @@ function renderTable(data) {
 </body>
 
 </html>
+

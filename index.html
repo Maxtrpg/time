@@ -5,148 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>馬茲提卡約團表</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
-<style>
-    :root {
-        --bg-paper: #F2E8D5; 
-        --ink-dark: #2F261F; 
-        --ink-light: #5E5044;
-        --antique-gold: #C9A86A; 
-        --perfect-green: #27ae60;
-        --potential-orange: #f39c12;
-        --fail-red: #c0392b;
-    }
+    <style>
+        :root {
+            --bg-paper: #F2E8D5; 
+            --ink-dark: #2F261F; 
+            --ink-light: #5E5044;
+            --antique-gold: #C9A86A; 
+            --perfect-green: #27ae60;
+            --potential-orange: #f39c12;
+            --fail-red: #8b0000; /* 深紅色 */
+        }
 
-    * { box-sizing: border-box; }
+        * { box-sizing: border-box; }
 
-    body {
-        background-color: var(--bg-paper);
-        color: var(--ink-dark);
-        font-family: 'Noto Serif TC', serif;
-        margin: 0; padding: 20px;
-        min-height: 100vh;
-        display: flex; flex-direction: column; align-items: center;
-        background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
-    }
+        body {
+            background-color: var(--bg-paper);
+            color: var(--ink-dark);
+            font-family: 'Noto Serif TC', serif;
+            margin: 0; padding: 20px;
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+        }
 
-    .container {
-        width: 100%; max-width: 900px;
-        background: #F9F4E6;
-        border: 4px solid var(--ink-dark);
-        border-radius: 8px;
-        padding: 30px;
-        box-shadow: 10px 10px 0 rgba(47, 38, 31, 0.2);
-    }
-    
-    .header { text-align: center; margin-bottom: 30px; border-bottom: 2px dashed var(--antique-gold); padding-bottom: 20px; }
-    h1 { font-family: 'Cinzel', serif; font-size: 2.5rem; margin: 0; color: var(--ink-dark); }
-    .subtitle { color: var(--ink-light); font-size: 1.1rem; font-weight: bold; }
-
-    .legend {
-        display: flex; justify-content: center; gap: 20px;
-        margin-bottom: 20px; font-weight: bold; font-size: 1rem;
-        background: rgba(255,255,255,0.5); padding: 10px 20px; border-radius: 50px;
-        border: 1px solid var(--ink-light); width: fit-content; margin-left: auto; margin-right: auto;
-    }
-
-    /* 表格容器 */
-    .table-wrapper {
-        overflow-x: auto;
-        border: 2px solid var(--ink-dark);
-        border-radius: 8px;
-        background: white;
-    }
-
-    table {
-        width: 100%; border-collapse: separate; border-spacing: 0;
-        white-space: nowrap;
-        table-layout: fixed; /* 讓表格寬度更穩定 */
-    }
-
-    th {
-        background: var(--ink-dark); color: #F2E8D5;
-        padding: 15px; position: sticky; top: 0; z-index: 20;
-        font-family: 'Cinzel', serif; letter-spacing: 1px; font-size: 1.1rem;
-        border-bottom: 3px solid var(--antique-gold);
-        min-width: 80px; /* ★ 玩家欄位固定最小寬度 */
-    }
-
-    td {
-        height: 55px; /* 格子稍微加高一點，讓符號呼吸 */
-        padding: 0;
-        border-bottom: 1px solid var(--ink-light);
-        border-right: 1px solid var(--ink-light);
-        vertical-align: middle;
-        min-width: 80px; /* ★ 玩家格寬度一致 */
-    }
-
-    /* === 第一欄 (日期) 設定 === */
-    td:first-child {
-        position: sticky; left: 0; z-index: 10;
-        background: #E8DCC5; 
-        border-right: 3px solid var(--ink-dark);
+        .container {
+            width: 100%; max-width: 1000px; /* 稍微加寬一點 */
+            background: #F9F4E6;
+            border: 4px solid var(--ink-dark);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 10px 10px 0 rgba(47, 38, 31, 0.2);
+        }
         
-        /* ★ 日期欄樣式調整 ★ */
-        text-align: center;  /* 置中 */
-        padding-left: 0;     /* 移除左邊距 */
-        color: var(--ink-dark);
-        font-size: 1rem; 
-        font-weight: bold;
-        width: 160px;       /* 加寬 */
-        min-width: 160px;   /* 固定寬度 */
-    }
+        .header { text-align: center; margin-bottom: 25px; border-bottom: 2px dashed var(--antique-gold); padding-bottom: 20px; }
+        h1 { font-family: 'Cinzel', serif; font-size: 2.2rem; margin: 0; color: var(--ink-dark); }
+        .subtitle { color: var(--ink-light); font-size: 1rem; font-weight: bold; margin-top: 5px; }
 
-    /* 重點標註樣式 */
-    td.date-perfect {
-        background: var(--perfect-green) !important;
-        color: white !important;
-    }
-    td.date-potential {
-        background: var(--potential-orange) !important;
-        color: white !important;
-    }
+        .legend {
+            display: flex; justify-content: center; gap: 20px;
+            margin-bottom: 20px; font-weight: bold; font-size: 1rem;
+            background: rgba(255,255,255,0.6); padding: 10px 25px; border-radius: 50px;
+            border: 1px solid var(--ink-light); width: fit-content; margin-left: auto; margin-right: auto;
+        }
 
-    /* === 狀態按鈕 (O X ?) 設定 === */
-    .cell-btn {
-        width: 100%; height: 100%;
-        display: flex; justify-content: center; align-items: center;
-        cursor: pointer; transition: 0.2s; user-select: none;
+        /* 表格區 */
+        .table-wrapper {
+            overflow-x: auto;
+            border: 2px solid var(--ink-dark);
+            border-radius: 8px;
+            background: white;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            white-space: nowrap;
+            table-layout: fixed; /* 固定佈局 */
+        }
+
+        th {
+            background: var(--ink-dark); color: #F2E8D5;
+            padding: 15px 5px; position: sticky; top: 0; z-index: 20;
+            font-family: 'Cinzel', serif; letter-spacing: 1px; font-size: 1.1rem;
+            border-bottom: 3px solid var(--antique-gold);
+            min-width: 80px; /* 玩家欄位最小寬度 */
+        }
+
+        td {
+            height: 55px; /* 固定高度 */
+            padding: 0;
+            border-bottom: 1px solid var(--ink-light);
+            border-right: 1px solid var(--ink-light);
+            vertical-align: middle;
+            min-width: 80px;
+        }
+
+        /* === 第一欄 (日期) === */
+        td:first-child {
+            position: sticky; left: 0; z-index: 10;
+            background: #E8DCC5; 
+            border-right: 3px solid var(--ink-dark);
+            text-align: center; /* 置中 */
+            color: var(--ink-dark);
+            font-size: 1rem; 
+            font-weight: bold;
+            width: 160px;       /* 加寬 */
+            min-width: 160px;
+        }
+
+        /* === 自動標註樣式 === */
+        td.date-perfect {
+            background: var(--perfect-green) !important;
+            color: white !important;
+            position: relative;
+        }
+        td.date-perfect::after {
+            content: "★"; position: absolute; right: 8px; top: 18px; font-size: 0.8rem; color: #ffd700;
+        }
+        td.date-potential {
+            background: var(--potential-orange) !important;
+            color: white !important;
+        }
+
+        /* === 狀態符號 (統一大小) === */
+        .cell-btn {
+            width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.2s; user-select: none;
+            
+            font-family: sans-serif; /* 統一字型 */
+            font-size: 1.3rem;       /* 統一大小 */
+            font-weight: 900;        /* 統一粗細 */
+        }
+        .cell-btn:hover { background: rgba(0,0,0,0.05); transform: scale(1.15); }
+
+        .status-o { color: var(--perfect-green); }
+        .status-x { color: var(--fail-red); }
+        .status-q { color: var(--potential-orange); }
+
+        .btn-refresh {
+            margin-top: 25px;
+            background: var(--ink-dark); color: #F2E8D5;
+            border: none; padding: 12px 30px;
+            font-size: 1rem; font-weight: bold; font-family: 'Cinzel', serif;
+            cursor: pointer; border-radius: 4px;
+            box-shadow: 0 4px 0 var(--antique-gold);
+            transition: all 0.2s; display: block; width: 100%;
+        }
+        .btn-refresh:hover { transform: translateY(2px); box-shadow: 0 2px 0 var(--antique-gold); }
+        .btn-refresh:active { transform: translateY(4px); box-shadow: none; }
         
-        /* ★ 統一字體大小 ★ */
-        font-family: sans-serif; /* 用無襯線字體讓符號看起來更圓潤統一 */
-        font-size: 1.3rem;       /* 大家一樣大 */
-        font-weight: 900;        /* 大家一樣粗 */
-    }
-    .cell-btn:hover { background: rgba(0,0,0,0.05); transform: scale(1.1); }
+        .footer { margin-top: 20px; color: var(--ink-light); font-size: 0.8rem; opacity: 0.6; }
 
-    /* 顏色設定 */
-    .status-o { color: var(--perfect-green); } 
-    .status-x { color: #8b0000; } /* 深紅色 */
-    .status-q { color: #e67e22; } /* 橘色 */
-    
-    .btn-refresh {
-        margin-top: 25px;
-        background: var(--ink-dark); color: #F2E8D5;
-        border: none; padding: 12px 30px;
-        font-size: 1rem; font-weight: bold; font-family: 'Cinzel', serif;
-        cursor: pointer; border-radius: 4px;
-        box-shadow: 0 4px 0 var(--antique-gold);
-        transition: all 0.2s; display: block; width: 100%;
-    }
-    .btn-refresh:hover { transform: translateY(2px); box-shadow: 0 2px 0 var(--antique-gold); }
-    .btn-refresh:active { transform: translateY(4px); box-shadow: none; }
-    
-    @media (max-width: 600px) {
-        .container { padding: 15px; }
-        h1 { font-size: 1.8rem; }
-    }
-</style>
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            h1 { font-size: 1.6rem; }
+            td:first-child { font-size: 0.9rem; width: 130px; min-width: 130px; }
+        }
+    </style>
 </head>
 <body>
 
     <div class="container">
         <div class="header">
             <h1 id="page-title">馬茲提卡約團表</h1>
-            <div class="subtitle" id="page-subtitle">Session Scheduler</div>
+            <div class="subtitle" id="page-subtitle">跑團時間約起來</div>
         </div>
 
         <div class="legend">
@@ -167,12 +170,10 @@
     <div class="footer">團務時間表</div>
 
     <script>
-        // ==========================================
-        // ★ 設定區：請修改您的 Google Script 網址 ★
-        // ==========================================
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4Dgqqv6InaW9RWGNpftleYLGZ96K9FHAUlbRLFezC67sSW9P9AnSBy-pJe0geKT0e9A/exec'; 
+        // ★★★ 請務必修改這裡：填入您的 Apps Script 網址 ★★★
+        const SCRIPT_URL = 'https://script.google.com/macros/s/您的ID/exec'; 
 
-        // 團務代號對應的中文標題 (您可以在這裡新增更多團)
+        // 團務代號設定
         const campaignTitles = {
             "01": "夸爾特之羽",
             "02": "三道獸跡",
@@ -181,27 +182,18 @@
             "05": "黑曜黎明"
         };
 
-        // ==========================================
-        // ★ 核心邏輯區 (不用動) ★
-        // ==========================================
-        
-        // 1. 抓取網址參數 ?g=xxx
         const urlParams = new URLSearchParams(window.location.search);
         const currentSheet = urlParams.get('g');
 
         document.addEventListener('DOMContentLoaded', () => {
             if (!currentSheet) {
                 document.getElementById('scheduler-container').innerHTML = 
-                    '<div style="padding:40px; text-align:center; color:#c0392b; font-weight:bold;">' +
-                    '⚠️ 錯誤：無效的連結<br><span style="font-size:0.9rem; color:#666;">請確認網址是否包含 ?g=團務代碼</span></div>';
-                document.getElementById('page-subtitle').innerText = "Link Error";
+                    '<div style="padding:40px; text-align:center; color:#8b0000; font-weight:bold;">⚠️ 連結無效<br><small>請確認網址包含 ?g=團務代碼</small></div>';
                 return;
             }
-
-            // 更新標題
             const titleText = campaignTitles[currentSheet] || currentSheet.toUpperCase();
             document.getElementById('page-title').innerText = titleText;
-            document.getElementById('page-subtitle').innerText = "團務時間約起來";
+            document.getElementById('page-subtitle').innerText = "Availability Check";
 
             loadSchedule();
         });
@@ -209,43 +201,36 @@
         function loadSchedule() {
             if (!currentSheet) return;
             const container = document.getElementById('scheduler-container');
-            container.style.opacity = 0.5; // 讀取時變半透明
+            container.style.opacity = 0.5;
 
             fetch(`${SCRIPT_URL}?sheet=${currentSheet}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.error) {
-                        container.innerHTML = `<div style="padding:30px; text-align:center;">找不到代號為 <b>${currentSheet}</b> 的資料表。</div>`;
+                        container.innerHTML = `<div style="padding:30px; text-align:center;">找不到代號 <b>${currentSheet}</b> 的資料。</div>`;
                     } else {
                         renderTable(data);
                     }
                     container.style.opacity = 1;
                 })
                 .catch(err => {
-                    console.error(err);
-                    container.innerHTML = '<div style="padding:30px; text-align:center;">連線失敗，請檢查網路或稍後再試。</div>';
+                    container.innerHTML = '<div style="padding:30px; text-align:center;">連線失敗，請檢查網路。</div>';
                 });
         }
 
-function renderTable(data) {
+        function renderTable(data) {
             let html = '<table><thead><tr>';
-            
-            // 表頭
             data[0].forEach(cell => html += `<th>${cell}</th>`);
             html += '</tr></thead><tbody>';
 
-            // 內容 (第二列開始)
             for (let i = 1; i < data.length; i++) {
                 const row = data[i];
-                const dateCell = row[0]; // 第一格是日期
+                const dateCell = row[0];
                 
-                // --- ★ 新增：判斷該行狀態 ★ ---
-                let countO = 0;
-                let countX = 0;
-                let countEmpty = 0;
-                let totalPlayers = row.length - 1; // 扣掉日期欄
+                // ★ 自動判讀邏輯 ★
+                let countO = 0, countX = 0, countEmpty = 0;
+                let totalPlayers = row.length - 1; 
 
-                // 檢查每一個玩家的格子
                 for (let j = 1; j < row.length; j++) {
                     const val = row[j] || '';
                     if (val === 'O') countO++;
@@ -253,35 +238,25 @@ function renderTable(data) {
                     else if (val === '') countEmpty++;
                 }
 
-                // 決定日期欄的 CSS Class
                 let dateClass = '';
-                if (countO === totalPlayers) {
-                    // 全都是 O -> 完美成團
-                    dateClass = 'date-perfect';
-                } else if (countX === 0 && countEmpty === 0) {
-                    // 沒有 X 也沒有空格 (但有 ? 或 O) -> 潛力股
-                    dateClass = 'date-potential';
-                }
-                // --------------------------------
+                if (countO === totalPlayers) dateClass = 'date-perfect'; // 全O
+                else if (countX === 0 && countEmpty === 0) dateClass = 'date-potential'; // 無X且填滿
 
                 html += '<tr>';
-                
-                // 日期欄 (套用上面的 class)
+                // 日期欄
                 let dateStr = dateCell.toString().replace('T00:00:00.000Z', ''); 
                 html += `<td class="${dateClass}">${dateStr}</td>`;
 
-                // 玩家狀態欄
+                // 玩家欄
                 for (let j = 1; j < row.length; j++) {
                     let val = row[j] || '';
-                    let display = val || '·';
                     let cssClass = '';
-                    
                     if (val === 'O') cssClass = 'status-o';
                     else if (val === 'X') cssClass = 'status-x';
                     else if (val === '?') cssClass = 'status-q';
                     
-                    // 注意：這裡多包了一層 div.cell-btn 來做 Flex 置中
-                    html += `<td><div class="cell-btn ${cssClass}" onclick="toggleStatus(this, ${i}, ${j})">${display}</div></td>`;
+                    // 用 div 包裹以利 Flex 置中
+                    html += `<td><div class="cell-btn ${cssClass}" onclick="toggleStatus(this, ${i}, ${j})">${val || '·'}</div></td>`;
                 }
                 html += '</tr>';
             }
@@ -290,41 +265,26 @@ function renderTable(data) {
         }
 
         function toggleStatus(el, row, col) {
-            // 狀態循環：空 -> O -> X -> ? -> 空
             const states = ['', 'O', 'X', '?'];
             let currentVal = el.innerText === '·' ? '' : el.innerText;
-            
             let nextIndex = (states.indexOf(currentVal) + 1) % states.length;
             let newVal = states[nextIndex];
 
-            // 1. UI 即時更新
+            // UI 即時更新
             el.innerText = newVal || '·';
-            el.className = 'cell-btn'; // 重置
+            el.className = 'cell-btn';
             if (newVal === 'O') el.classList.add('status-o');
             else if (newVal === 'X') el.classList.add('status-x');
             else if (newVal === '?') el.classList.add('status-q');
 
-            // ★ 點擊後，整張表的「重點標註」可能會改變
-            // 但因為我們只有局部更新 UI，如果要即時更新左邊日期的顏色，
-            // 比較簡單的做法是背景傳送資料，使用者手動按「重新整理」才會變色。
-            // (如果要即時變色，需要重算整行的邏輯，比較複雜，先維持這樣效能最好)
-
-            // 2. 背景傳送
+            // 傳送資料
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    sheet: currentSheet,
-                    row: row,
-                    col: col,
-                    val: newVal
-                })
-            }).catch(err => console.error("Save error:", err));
+                body: JSON.stringify({ sheet: currentSheet, row: row, col: col, val: newVal })
+            }).catch(err => console.error(err));
         }
     </script>
 </body>
-
 </html>
-
-

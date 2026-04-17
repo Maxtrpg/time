@@ -264,26 +264,46 @@
             document.getElementById('scheduler-container').innerHTML = html;
         }
 
+// ★ 新增：用來記錄「倒數計時器」的抽屜
+        const saveTimers = {};
+
+        // 替換掉原本的 toggleStatus 函式
         function toggleStatus(el, row, col) {
             const states = ['', 'O', 'X', '?'];
             let currentVal = el.innerText === '·' ? '' : el.innerText;
             let nextIndex = (states.indexOf(currentVal) + 1) % states.length;
             let newVal = states[nextIndex];
 
-            // UI 即時更新
+            // 1. UI 即時更新 (畫面馬上改變)
             el.innerText = newVal || '·';
             el.className = 'cell-btn';
             if (newVal === 'O') el.classList.add('status-o');
             else if (newVal === 'X') el.classList.add('status-x');
             else if (newVal === '?') el.classList.add('status-q');
 
-            // 傳送資料
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ sheet: currentSheet, row: row, col: col, val: newVal })
-            }).catch(err => console.error(err));
+            // ==========================================
+            // 2. ★ 防抖機制 (解決連點蓋掉資料的問題) ★
+            // ==========================================
+            let cellKey = row + '-' + col; // 幫這個格子取個專屬 ID (例如 "2-3")
+
+            // 如果 0.5 秒內玩家又點了這個格子，就把前一次的傳送任務取消
+            if (saveTimers[cellKey]) {
+                clearTimeout(saveTimers[cellKey]);
+            }
+
+            // 重新設定一個 0.5 秒的倒數計時器
+            // 也就是說：等玩家對這個格子「停手」 0.5 秒後，才真正傳送給 Google
+            saveTimers[cellKey] = setTimeout(() => {
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ sheet: currentSheet, row: row, col: col, val: newVal })
+                }).catch(err => console.error("Save error:", err));
+                
+                // 傳送完畢後清空計時器紀錄
+                delete saveTimers[cellKey];
+            }, 500); 
         }
     </script>
 </body>

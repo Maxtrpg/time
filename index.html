@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>馬茲提卡約團表</title>
+    <title>團務時空樞紐 | Scheduler</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -28,13 +28,16 @@
             background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
         }
 
+        /* 容器卡片 (寬度會由 JS 動態控制) */
         .container {
-            width: 100%; max-width: 1000px; /* 稍微加寬一點 */
+            width: 100%; 
+            max-width: 1000px; 
             background: #F9F4E6;
             border: 4px solid var(--ink-dark);
             border-radius: 8px;
             padding: 30px;
             box-shadow: 10px 10px 0 rgba(47, 38, 31, 0.2);
+            transition: max-width 0.3s ease; /* 放大時的滑順動畫 */
         }
         
         .header { text-align: center; margin-bottom: 25px; border-bottom: 2px dashed var(--antique-gold); padding-bottom: 20px; }
@@ -48,19 +51,23 @@
             border: 1px solid var(--ink-light); width: fit-content; margin-left: auto; margin-right: auto;
         }
 
-        /* 表格區 */
+        /* ================= 表格區塊 ================= */
         .table-wrapper {
             overflow-x: auto;
             border: 2px solid var(--ink-dark);
             border-radius: 8px;
             background: white;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            -webkit-overflow-scrolling: touch; /* 讓手機橫向滑動更順 */
         }
 
         table {
-            width: 100%; border-collapse: separate; border-spacing: 0;
+            min-width: 100%;
+            width: max-content; /* 根據人數向外撐開 */
+            border-collapse: separate; 
+            border-spacing: 0;
             white-space: nowrap;
-            table-layout: fixed; /* 固定佈局 */
+            table-layout: fixed; 
         }
 
         th {
@@ -68,46 +75,42 @@
             padding: 15px 5px; position: sticky; top: 0; z-index: 20;
             font-family: 'Cinzel', serif; letter-spacing: 1px; font-size: 1.1rem;
             border-bottom: 3px solid var(--antique-gold);
-            min-width: 80px; /* 玩家欄位最小寬度 */
+            width: 100px; min-width: 100px; /* 玩家欄寬度 */
         }
 
         td {
-            height: 55px; /* 固定高度 */
-            padding: 0;
+            height: 55px; padding: 0;
             border-bottom: 1px solid var(--ink-light);
             border-right: 1px solid var(--ink-light);
             vertical-align: middle;
-            min-width: 80px;
+            width: 100px; min-width: 100px;
         }
 
-        /* === 第一欄 (日期) === */
+        /* 第一欄 (日期) */
         td:first-child {
-            position: sticky; left: 0; z-index: 10;
+            position: sticky; left: 0; z-index: 30; /* 確保滑動時蓋在別的格子上面 */
             background: #E8DCC5; 
             border-right: 3px solid var(--ink-dark);
-            text-align: center; /* 置中 */
-            color: var(--ink-dark);
-            font-size: 1rem; 
-            font-weight: bold;
-            width: 160px;       /* 加寬 */
-            min-width: 160px;
+            text-align: center; color: var(--ink-dark);
+            font-size: 1rem; font-weight: bold;
+            width: 160px; min-width: 160px; /* 日期欄比較寬 */
         }
 
-        /* === 自動標註樣式 === */
+        /* 自動重點標註 */
         td.date-perfect {
             background: var(--perfect-green) !important;
             color: white !important;
             position: relative;
         }
         td.date-perfect::after {
-            content: "★"; position: absolute; right: 8px; top: 18px; font-size: 0.8rem; color: #ffd700;
+            content: "★ GO!"; position: absolute; right: 10px; top: 18px; font-size: 0.8rem; color: #ffd700;
         }
         td.date-potential {
             background: var(--potential-orange) !important;
             color: white !important;
         }
 
-        /* === 狀態符號 (統一大小) === */
+        /* ================= 狀態符號 (O X ?) ================= */
         .cell-btn {
             width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center;
@@ -123,6 +126,7 @@
         .status-x { color: var(--fail-red); }
         .status-q { color: var(--potential-orange); }
 
+        /* ================= 其他按鈕與底部 ================= */
         .btn-refresh {
             margin-top: 25px;
             background: var(--ink-dark); color: #F2E8D5;
@@ -140,50 +144,53 @@
         @media (max-width: 600px) {
             .container { padding: 15px; }
             h1 { font-size: 1.6rem; }
-            td:first-child { font-size: 0.9rem; width: 130px; min-width: 130px; }
+            td:first-child { font-size: 0.9rem; width: 120px; min-width: 120px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="container" id="main-container">
         <div class="header">
-            <h1 id="page-title">馬茲提卡約團表</h1>
-            <div class="subtitle" id="page-subtitle">跑團時間約起來</div>
+            <h1 id="page-title">團務時空樞紐</h1>
+            <div class="subtitle" id="page-subtitle">Session Scheduler</div>
         </div>
 
         <div class="legend">
-            <span class="status-o">O (可以)</span>
-            <span class="status-x">X (不行)</span>
+            <span class="status-o">O (可)</span>
+            <span class="status-x">X (不可)</span>
             <span class="status-q">? (未定)</span>
         </div>
 
         <div id="scheduler-container" class="table-wrapper">
             <div style="padding: 50px; text-align: center; color: var(--ink-light);">
-                正在讀取...
+                正在讀取星象紀錄...
             </div>
         </div>
 
-        <button class="btn-refresh" onclick="loadSchedule()">↻ 重新整理 / 儲存確認</button>
+        <button class="btn-refresh" onclick="loadSchedule(true)">↻ 手動強制同步</button>
     </div>
 
-    <div class="footer">團務時間表</div>
+    <div class="footer">MAZTICA CAMPAIGN TOOLS</div>
 
     <script>
-        // ★★★ 請務必修改這裡：填入您的 Apps Script 網址 ★★★
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvwkvTqXasygAZuzLxrDgHctYlKvzi8Y7EBjNEqTyXszWUftvm5zdqYH11badZRJdBXA/exec'; 
+        // ==========================================
+        // ★ 設定區：請填入您的 Google Apps Script 網址
+        // ==========================================
+        const SCRIPT_URL = 'https://script.google.com/macros/s/您的ID/exec'; 
 
-        // 團務代號設定
         const campaignTitles = {
-            "01": "夸爾特之羽",
-            "02": "三道獸跡",
-            "03": "布萊梅酉仁",
-            "04": "黑曜之律",
-            "05": "黑曜黎明"
+            "maztica": "馬茲提卡：第三章",
+            "coc": "COC：誰是沼澤人",
+            "dragonbane": "龍與魔：新手體驗"
         };
 
         const urlParams = new URLSearchParams(window.location.search);
         const currentSheet = urlParams.get('g');
+
+        // 計時器區
+        let autoRefreshTimer = null;
+        const saveTimers = {}; // 存放防抖計時器
 
         document.addEventListener('DOMContentLoaded', () => {
             if (!currentSheet) {
@@ -191,34 +198,64 @@
                     '<div style="padding:40px; text-align:center; color:#8b0000; font-weight:bold;">⚠️ 連結無效<br><small>請確認網址包含 ?g=團務代碼</small></div>';
                 return;
             }
+            
             const titleText = campaignTitles[currentSheet] || currentSheet.toUpperCase();
             document.getElementById('page-title').innerText = titleText;
-            document.getElementById('page-subtitle').innerText = "跑團時間約起來";
 
-            loadSchedule();
+            // 第一次載入 (顯示半透明讀取效果)
+            loadSchedule(true);
+
+            // 啟動自動同步 (每 5 秒一次)
+            startAutoRefresh();
         });
 
-        function loadSchedule() {
+        function startAutoRefresh() {
+            if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+            autoRefreshTimer = setInterval(() => {
+                loadSchedule(false); // false: 背景更新，不顯示讀取動畫
+            }, 5000);
+        }
+
+        function loadSchedule(isFirstLoad = false) {
             if (!currentSheet) return;
             const container = document.getElementById('scheduler-container');
-            container.style.opacity = 0.5;
+            
+            if (isFirstLoad) container.style.opacity = 0.5;
 
             fetch(`${SCRIPT_URL}?sheet=${currentSheet}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.error) {
-                        container.innerHTML = `<div style="padding:30px; text-align:center;">找不到代號 <b>${currentSheet}</b> 的資料。</div>`;
+                        if (isFirstLoad) container.innerHTML = `<div style="padding:30px; text-align:center;">找不到代號 <b>${currentSheet}</b> 的資料。</div>`;
                     } else {
                         renderTable(data);
+                        updateRefreshTime();
                     }
                     container.style.opacity = 1;
                 })
                 .catch(err => {
-                    container.innerHTML = '<div style="padding:30px; text-align:center;">連線失敗，請檢查網路。</div>';
+                    if (isFirstLoad) container.innerHTML = '<div style="padding:30px; text-align:center;">連線失敗，請檢查網路。</div>';
+                    container.style.opacity = 1;
                 });
         }
 
+        function updateRefreshTime() {
+            const now = new Date();
+            const timeStr = now.toTimeString().split(' ')[0]; // 取 HH:MM:SS
+            const btn = document.querySelector('.btn-refresh');
+            if(btn) btn.innerHTML = `↻ 資料已同步 (${timeStr})`;
+        }
+
         function renderTable(data) {
+            // 動態調整容器寬度 (超過 6 人就撐大)
+            const playerCount = data[0].length - 1; 
+            const containerBox = document.getElementById('main-container');
+            if (playerCount > 6) {
+                containerBox.style.maxWidth = '95%';
+            } else {
+                containerBox.style.maxWidth = '1000px';
+            }
+
             let html = '<table><thead><tr>';
             data[0].forEach(cell => html += `<th>${cell}</th>`);
             html += '</tr></thead><tbody>';
@@ -227,7 +264,7 @@
                 const row = data[i];
                 const dateCell = row[0];
                 
-                // ★ 自動判讀邏輯 ★
+                // 計算成團狀態
                 let countO = 0, countX = 0, countEmpty = 0;
                 let totalPlayers = row.length - 1; 
 
@@ -240,9 +277,10 @@
 
                 let dateClass = '';
                 if (countO === totalPlayers) dateClass = 'date-perfect'; // 全O
-                else if (countX === 0 && countEmpty === 0) dateClass = 'date-potential'; // 無X且填滿
+                else if (countX === 0 && countEmpty === 0) dateClass = 'date-potential'; // 無X且無空
 
                 html += '<tr>';
+                
                 // 日期欄
                 let dateStr = dateCell.toString().replace('T00:00:00.000Z', ''); 
                 html += `<td class="${dateClass}">${dateStr}</td>`;
@@ -255,44 +293,33 @@
                     else if (val === 'X') cssClass = 'status-x';
                     else if (val === '?') cssClass = 'status-q';
                     
-                    // 用 div 包裹以利 Flex 置中
                     html += `<td><div class="cell-btn ${cssClass}" onclick="toggleStatus(this, ${i}, ${j})">${val || '·'}</div></td>`;
                 }
                 html += '</tr>';
             }
             html += '</tbody></table>';
+            
+            // 將組合好的 HTML 寫入畫面
             document.getElementById('scheduler-container').innerHTML = html;
         }
 
-// ★ 新增：用來記錄「倒數計時器」的抽屜
-        const saveTimers = {};
-
-        // 替換掉原本的 toggleStatus 函式
         function toggleStatus(el, row, col) {
             const states = ['', 'O', 'X', '?'];
             let currentVal = el.innerText === '·' ? '' : el.innerText;
             let nextIndex = (states.indexOf(currentVal) + 1) % states.length;
             let newVal = states[nextIndex];
 
-            // 1. UI 即時更新 (畫面馬上改變)
+            // 1. UI 即時更新
             el.innerText = newVal || '·';
             el.className = 'cell-btn';
             if (newVal === 'O') el.classList.add('status-o');
             else if (newVal === 'X') el.classList.add('status-x');
             else if (newVal === '?') el.classList.add('status-q');
 
-            // ==========================================
-            // 2. ★ 防抖機制 (解決連點蓋掉資料的問題) ★
-            // ==========================================
-            let cellKey = row + '-' + col; // 幫這個格子取個專屬 ID (例如 "2-3")
+            // 2. 防抖機制 (Debounce) - 等玩家停手 0.5 秒後再傳送
+            let cellKey = row + '-' + col;
+            if (saveTimers[cellKey]) clearTimeout(saveTimers[cellKey]);
 
-            // 如果 0.5 秒內玩家又點了這個格子，就把前一次的傳送任務取消
-            if (saveTimers[cellKey]) {
-                clearTimeout(saveTimers[cellKey]);
-            }
-
-            // 重新設定一個 0.5 秒的倒數計時器
-            // 也就是說：等玩家對這個格子「停手」 0.5 秒後，才真正傳送給 Google
             saveTimers[cellKey] = setTimeout(() => {
                 fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -301,12 +328,9 @@
                     body: JSON.stringify({ sheet: currentSheet, row: row, col: col, val: newVal })
                 }).catch(err => console.error("Save error:", err));
                 
-                // 傳送完畢後清空計時器紀錄
                 delete saveTimers[cellKey];
             }, 500); 
         }
     </script>
 </body>
 </html>
-
-
